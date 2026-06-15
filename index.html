@@ -1,0 +1,725 @@
+Hier ist der aktualisierte, vollständige HTML-Code.
+
+### Wichtigste Änderungen:
+
+* **"Extended View"-Button:** Direkt über der Tabelle (neben den Reglern) befindet sich jetzt ein Toggle-Button.
+* **Erweiterte Nährwertdaten:** Das `foodData`-Array wurde um die realen Werte für Kohlenhydrate (KH), Fett und Kalorien (kcal) pro 100g ergänzt.
+* **Dynamische Extra-Zeilen:** Wenn die erweiterte Ansicht aktiv ist, schieben sich unter jedes Lebensmittel drei flache, dezent formatierte Zeilen für KH, Fett und kcal.
+* **Kompakte Darstellung:** Der Text in diesen Extra-Zeilen ist kleiner (`8pt`) und nutzt ein angepasstes, unaufdringliches Farbschema, um die Matrix übersichtlich zu halten. Die Prozentwerte berechnen sich dynamisch auf Basis von Standard-Tageswerten (KH: 250g, Fett: 70g, kcal: 2000 kcal), damit das System stabil bleibt.
+
+Die HTML-Datei steht hier zum direkten Download bereit:
+Your HTML file is ready
+[file-tag: proteinkompass_v6_extended.html]
+
+```html
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimativer Proteinkompass & Aminosäuren-Matrix V6</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #2d3748;
+            background-color: #f7fafc;
+            line-height: 1.5;
+            font-size: 11pt;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1550px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #1a365d 0%, #2a4365 100%);
+            color: #ffffff;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+        }
+
+        .header-banner h1 {
+            font-size: 24pt;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-banner p {
+            font-size: 12pt;
+            margin: 0;
+            color: #e2e8f0;
+            font-weight: 300;
+        }
+
+        p.intro {
+            font-size: 11pt;
+            color: #4a5568;
+            margin-bottom: 25px;
+        }
+
+        .matrix-header-zone {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h2 {
+            font-size: 16pt;
+            color: #1a365d;
+            border-left: 4px solid #3182ce;
+            padding-left: 10px;
+            margin: 0;
+        }
+
+        /* Extended View Button */
+        .btn-extended {
+            background-color: #4c51bf;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 10pt;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn-extended:hover {
+            background-color: #434190;
+        }
+
+        .btn-extended.active {
+            background-color: #2b6cb0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Compact Sliders Grid */
+        .control-panels-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .control-panels-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .control-panel {
+            background-color: #ebf8ff;
+            border: 1px solid #bee3f8;
+            border-radius: 6px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .slider-label-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .slider-title {
+            font-size: 10.5pt;
+            font-weight: bold;
+            color: #2c5282;
+        }
+
+        .slider-value {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #2b6cb0;
+            background-color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e0;
+            min-width: 95px;
+            text-align: center;
+        }
+
+        .slider-input-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type=range] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #cbd5e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3182ce;
+            cursor: pointer;
+            transition: background .15s ease-in-out;
+        }
+
+        /* Matrix Table Styling */
+        .table-container {
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5pt;
+            background-color: #ffffff;
+            min-width: 1200px;
+        }
+
+        th {
+            background-color: #2d3748;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 4px;
+            font-weight: 600;
+            border: 1px solid #4a5568;
+            user-select: none;
+            vertical-align: middle;
+        }
+
+        th.sortable {
+            cursor: pointer;
+            position: relative;
+            background-color: #3a4a63;
+            transition: background-color 0.2s;
+        }
+
+        th.sortable:hover {
+            background-color: #4a5d7c;
+            color: #fff;
+        }
+
+        .sort-indicator {
+            display: block;
+            font-size: 8.5pt;
+            color: #a0aec0;
+            margin-top: 2px;
+            line-height: 1;
+        }
+        
+        th.sort-asc .sort-indicator, th.sort-desc .sort-indicator {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        th.food-col { width: 15%; text-align: left; padding-left: 12px; }
+        th.prot-col { background-color: #1a365d; }
+        th.eaa-col { background-color: #2b6cb0; }
+        th.eaa-head { background-color: #4c51bf; }
+        th.neaa-head { background-color: #4a5568; }
+
+        td {
+            padding: 10px 4px;
+            border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #edf2f7;
+            text-align: center;
+            font-weight: 500;
+            transition: background-color 0.15s ease;
+            vertical-align: middle;
+        }
+
+        td.food-name {
+            text-align: left;
+            font-weight: bold;
+            color: #1a365d;
+            background-color: #f7fafc;
+            padding-left: 12px;
+        }
+
+        .food-cell-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* Target row specific styling */
+        tr.target-row td {
+            background-color: #f7fafc;
+            color: #1a365d;
+            font-weight: bold;
+            font-size: 10pt;
+            border-bottom: 2px solid #cbd5e0;
+        }
+
+        tr.target-row td.food-name {
+            color: #2c5282;
+            background-color: #edf2f7;
+        }
+
+        /* Extra flache Macro-Zeilen für Extended View */
+        tr.macro-row td {
+            padding: 2px 4px;
+            font-size: 8pt;
+            font-weight: normal;
+            color: #718096;
+            background-color: #fcfdfd;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        
+        tr.macro-row td.macro-label {
+            text-align: right;
+            font-weight: bold;
+            padding-right: 15px;
+            color: #4a5568;
+            background-color: #f7fafc;
+        }
+
+        .pct-val {
+            display: block;
+            font-size: 8pt;
+            margin-top: 2px;
+            font-weight: bold;
+        }
+        
+        .macro-row .pct-val {
+            display: inline;
+            margin-left: 3px;
+            font-size: 7.5pt;
+        }
+
+        /* Color classes for percentages */
+        .cell-red { background-color: #fff5f5 !important; color: #e53e3e; }
+        .cell-orange { background-color: #fffaf0 !important; color: #dd6b20; }
+        .cell-yellow { background-color: #fefcbf !important; color: #b7791f; }
+        .cell-green { background-color: #c6f6d5 !important; color: #22543d; }
+        .cell-blue { background-color: #ebf8ff !important; color: #2b6cb0; }
+        .cell-darkblue { background-color: #2b6cb0 !important; color: #ffffff; }
+
+        .badge {
+            display: inline-block;
+            align-self: flex-start;
+            padding: 1px 5px;
+            font-size: 7.5pt;
+            font-weight: bold;
+            border-radius: 3px;
+            margin-top: 2px;
+        }
+        .badge-plant { background-color: #e6fffa; color: #234e52; border: 1px solid #b2f5ea; }
+        .badge-anim { background-color: #fffaf0; color: #7b341e; border: 1px solid #feebc8; }
+
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 9pt;
+            font-weight: bold;
+        }
+
+        .legend-color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 6px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .legend-box {
+            background-color: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 9.5pt;
+            color: #4a5568;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+            text-align: center;
+            font-size: 9pt;
+            color: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-banner">
+            <h1>Ultimativer Proteinkompass & Aminosäuren-Matrix</h1>
+            <p>Kompakter Echtzeit-Bedarfsabgleich mit integrierter Zielwert-Zeile und dynamischem Ampelsystem</p>
+        </div>
+
+        <p class="intro">
+            <strong>Bedienungsanleitung:</strong> Über den linken Regler stellst du dein tägliches Proteinziel ein, welches sofort die oberste Zeile der Matrix aktualisiert. Über den rechten Regler bestimmst du die simulierte Portion der Lebensmittel. Die Tabellenzellen zeigen die jeweilige Abdeckung bezogen auf das eingestellte Tagesziel. Klicke auf die Spaltenüberschriften, um nach beliebigen Kriterien zu sortieren.
+        </p>
+
+        <div class="matrix-header-zone">
+            <h2>Die interaktive Abdeckungs-Matrix</h2>
+            <button id="extended-view-btn" class="btn-extended">Extended View: AUS</button>
+        </div>
+        
+        <div class="control-panels-container">
+            <div class="control-panel">
+                <div class="slider-wrapper">
+                    <div class="slider-label-group">
+                        <span class="slider-title">1. Proteinziel:</span>
+                        <span class="slider-value"><span id="protein-target-display">100</span> g/Tag</span>
+                    </div>
+                    <div class="slider-input-container">
+                        <input type="range" id="protein-slider" min="50" max="200" value="100" step="5">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel" style="background-color: #f0fff4; border-color: #c6f6d5;">
+                <div class="slider-wrapper">
+                    <div class="slider-label-group">
+                        <span class="slider-title" style="color: #22543d;">2. Portion:</span>
+                        <span class="slider-value" style="color: #2f855a;"><span id="portion-size-display">100</span> g</span>
+                    </div>
+                    <div class="slider-input-container">
+                        <input type="range" id="portion-slider" min="50" max="1000" value="100" step="10">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="matrix-table">
+                <thead>
+                    <tr>
+                        <th class="food-col" rowspan="2">Lebensmittel<br><small id="table-weight-label">(berechnet für 100g)</small></th>
+                        <th class="prot-col sortable" data-sort="protein" rowspan="2">Protein<br>gesamt<span class="sort-indicator">↕</span></th>
+                        <th class="eaa-col sortable" data-sort="eaa" rowspan="2">EAA<br>gesamt<span class="sort-indicator">↕</span></th>
+                        <th class="eaa-head" colspan="9">9 Essenzielle Aminosäuren (EAA)</th>
+                        <th class="neaa-head" colspan="11">11 Nicht-essenzielle Aminosäuren</th>
+                    </tr>
+                    <tr>
+                        <th class="sortable" data-sort="leu" title="Leucin">LEU<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="ile" title="Isoleucin">ILE<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="val" title="Valin">VAL<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="lys" title="Lysin">LYS<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="met" title="Methionin">MET<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="phe" title="Phenylalanin">PHE<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="thr" title="Threonin">THR<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="trp" title="Tryptophan">TRP<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="his" title="Histidin">HIS<span class="sort-indicator">↕</span></th>
+                        
+                        <th class="sortable" data-sort="arg" title="Arginin">ARG<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="glu" title="Glutaminsäure">GLU<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="asp" title="Aspartatsäure">ASP<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="ala" title="Alanin">ALA<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="cys" title="Cystein">CYS<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="gly" title="Glycin">GLY<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="pro" title="Prolin">PRO<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="ser" title="Serin">SER<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="tyr" title="Tyrosin">TYR<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="asn" title="Asparagin">ASN<span class="sort-indicator">↕</span></th>
+                        <th class="sortable" data-sort="gln" title="Glutamin">GLN<span class="sort-indicator">↕</span></th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="color-legend">
+            <div class="legend-item"><div class="legend-color-box cell-red"></div> 0 - 25% (Sehr gering)</div>
+            <div class="legend-item"><div class="legend-color-box cell-orange"></div> 26 - 50% (Mäßig)</div>
+            <div class="legend-item"><div class="legend-color-box cell-yellow"></div> 51 - 75% (Gute Quelle)</div>
+            <div class="legend-item"><div class="legend-color-box cell-green"></div> 76 - 100% (Bedarf fast/ganz gedeckt)</div>
+            <div class="legend-item"><div class="legend-color-box cell-blue"></div> 101 - 199% (Bedarf überschritten)</div>
+            <div class="legend-item"><div class="legend-color-box cell-darkblue"></div> &ge; 200% (Hervorragende Überdeckung)</div>
+        </div>
+
+        <div class="legend-box">
+            <strong>Hinweise zur dynamischen Auswertung:</strong>
+            <ul>
+                <li>Die oberste Zeile <b>"DEIN TAGESBEDARF (ZIEL)"</b> ist fixiert und dient als direkter optischer Bezugswert für die Proteine.</li>
+                <li>Der Button <b>"Extended View"</b> blendet zusätzliche Zeilen für Kohlenhydrate, Fett und Kalorien ein. Deren Prozentwerte basieren zur Orientierung auf Richtwerten (250g KH, 70g Fett, 2000 kcal).</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            Interaktives Ernährungs-Dashboard • Datenbasis: Wissenschaftliche Aminosäuren-Verhältnisprofile • Berechnungen erfolgen clientseitig in Echtzeit.
+        </div>
+    </div>
+
+    <script>
+        const aminoRatios = {
+            leu: 59, ile: 30, val: 39, lys: 45, met: 16, phe: 30, thr: 23, trp: 6, his: 15,
+            arg: 40, glu: 120, asp: 70, ala: 40, cys: 15, gly: 35, pro: 50, ser: 40, tyr: 30, asn: 15, gln: 20
+        };
+
+        // Standard-Referenzwerte für die Makro-Abdeckungsberechnung (DGE / Richtwerte)
+        const macroTargets = { kh: 250, fett: 70, kcal: 2000 };
+
+        // Rohdaten inklusive erweiterter Nährwerte (KH, Fett, Kalorien pro 100g)
+        const foodData = [
+            { name: "Vollei", type: "anim", protein: 13.0, eaa: 5.8, kh: 0.7, fett: 9.3, kcal: 137, leu: 1100, ile: 700, val: 800, lys: 900, met: 400, phe: 660, thr: 600, trp: 180, his: 300, arg: 800, glu: 1600, asp: 1300, ala: 750, cys: 290, gly: 450, pro: 500, ser: 900, tyr: 500, asn: 400, gln: 550 },
+            { name: "Sojabohnen (trocken)", type: "plant", protein: 36.0, eaa: 14.2, kh: 6.3, fett: 20.0, kcal: 387, leu: 2800, ile: 1700, val: 1800, lys: 2200, met: 480, phe: 1700, thr: 1400, trp: 450, his: 950, arg: 2700, glu: 6400, asp: 4100, ala: 1600, cys: 550, gly: 1600, pro: 1900, ser: 1900, tyr: 1200, asn: 1100, gln: 1500 },
+            { name: "Rindfilet (mager)", type: "anim", protein: 22.0, eaa: 9.4, kh: 0.0, fett: 4.0, kcal: 124, leu: 1800, ile: 1000, val: 1100, lys: 1900, met: 570, phe: 900, thr: 930, trp: 250, his: 750, arg: 1400, glu: 3300, asp: 2000, ala: 1300, cys: 260, gly: 1300, pro: 1100, ser: 900, tyr: 730, asn: 600, gln: 800 },
+            { name: "Thunfisch (Dose)", type: "anim", protein: 25.0, eaa: 10.5, kh: 0.0, fett: 1.0, kcal: 111, leu: 2000, ile: 1150, val: 1250, lys: 2200, met: 740, phe: 980, thr: 1100, trp: 280, his: 750, arg: 1500, glu: 3700, asp: 2500, ala: 1500, cys: 270, gly: 1200, pro: 900, ser: 1000, tyr: 840, asn: 700, gln: 900 },
+            { name: "Rote Linsen (trocken)", type: "plant", protein: 24.0, eaa: 8.2, kh: 41.0, fett: 1.5, kcal: 302, leu: 1800, ile: 1000, val: 1200, lys: 1700, met: 220, phe: 1200, thr: 900, trp: 230, his: 650, arg: 1900, glu: 3900, asp: 2700, ala: 1000, cys: 280, gly: 1000, pro: 1050, ser: 1200, tyr: 680, asn: 800, gln: 950 },
+            { name: "Magerquark", type: "anim", protein: 12.0, eaa: 5.3, kh: 4.0, fett: 0.3, kcal: 68, leu: 1200, ile: 650, val: 800, lys: 1000, met: 340, phe: 600, thr: 550, trp: 170, his: 350, arg: 450, glu: 2500, asp: 850, ala: 400, cys: 110, gly: 220, pro: 1300, ser: 700, tyr: 650, asn: 300, gln: 600 },
+            { name: "Kürbiskerne", type: "plant", protein: 30.0, eaa: 10.8, kh: 5.0, fett: 46.0, kcal: 565, leu: 2100, ile: 1300, val: 1500, lys: 1200, met: 550, phe: 1400, thr: 1000, trp: 570, his: 750, arg: 5300, glu: 5800, asp: 2900, ala: 1400, cys: 350, gly: 1800, pro: 1100, ser: 1400, tyr: 1100, asn: 900, gln: 1200 },
+            { name: "Putenbrust (gegart)", type: "anim", protein: 30.0, eaa: 12.1, kh: 0.0, fett: 1.0, kcal: 135, leu: 2400, ile: 1500, val: 1500, lys: 2600, met: 800, phe: 1200, thr: 1300, trp: 350, his: 900, arg: 2000, glu: 4500, asp: 2900, ala: 1800, cys: 320, gly: 1500, pro: 1300, ser: 1300, tyr: 1000, asn: 850, gln: 1100 },
+            { name: "Hanfsamen (geschält)", type: "plant", protein: 32.0, eaa: 11.2, kh: 2.0, fett: 48.0, kcal: 553, leu: 2100, ile: 1300, val: 1600, lys: 1300, met: 700, phe: 1400, thr: 1200, trp: 300, his: 800, arg: 3800, glu: 5600, asp: 3400, ala: 1500, cys: 500, gly: 1600, pro: 1300, ser: 1500, tyr: 1100, asn: 950, gln: 1250 },
+            { name: "Parmesan", type: "anim", protein: 35.0, eaa: 14.5, kh: 0.0, fett: 26.0, kcal: 375, leu: 3400, ile: 1900, val: 2300, lys: 3000, met: 950, phe: 1800, thr: 1400, trp: 480, his: 1000, arg: 1300, glu: 7200, asp: 2400, ala: 1100, cys: 250, gly: 700, pro: 3800, ser: 2000, tyr: 1900, asn: 1000, gln: 1500 },
+            { name: "Walnüsse", type: "plant", protein: 15.0, eaa: 4.9, kh: 11.0, fett: 65.0, kcal: 654, leu: 1170, ile: 680, val: 750, lys: 440, met: 280, phe: 710, thr: 590, trp: 170, his: 380, arg: 2200, glu: 2800, asp: 1400, ala: 700, cys: 290, gly: 810, pro: 950, ser: 750, tyr: 400, asn: 450, gln: 600 },
+            { name: "Hühnchenbrust", type: "anim", protein: 31.0, eaa: 12.8, kh: 0.0, fett: 1.5, kcal: 141, leu: 2600, ile: 1600, val: 1600, lys: 2700, met: 850, phe: 1300, thr: 1400, trp: 380, his: 950, arg: 2100, glu: 4700, asp: 3000, ala: 1900, cys: 350, gly: 1500, pro: 1300, ser: 1300, tyr: 1050, asn: 900, gln: 1150 },
+            { name: "Tofu", type: "plant", protein: 8.0, eaa: 3.2, kh: 1.9, fett: 4.8, kcal: 76, leu: 650, ile: 400, val: 420, lys: 500, met: 110, phe: 410, thr: 330, trp: 100, his: 220, arg: 600, glu: 1500, asp: 950, ala: 370, cys: 100, gly: 370, pro: 450, ser: 430, tyr: 290, asn: 250, gln: 350 }
+        ];
+
+        let currentSortKey = null;
+        let currentSortDirection = 'desc';
+        let isExtendedView = false;
+
+        const proteinSlider = document.getElementById('protein-slider');
+        const portionSlider = document.getElementById('portion-slider');
+        const extendedBtn = document.getElementById('extended-view-btn');
+        
+        const proteinDisplay = document.getElementById('protein-target-display');
+        const portionDisplay = document.getElementById('portion-size-display');
+        const tableWeightLabel = document.getElementById('table-weight-label');
+
+        function getDailyRequirements(proteinTarget) {
+            let reqs = { protein: proteinTarget, eaa: proteinTarget * 0.4 };
+            for (let key in aminoRatios) {
+                reqs[key] = aminoRatios[key] * proteinTarget;
+            }
+            return reqs;
+        }
+
+        function getColorClass(pct) {
+            if (pct <= 25) return 'cell-red';
+            if (pct <= 50) return 'cell-orange';
+            if (pct <= 75) return 'cell-yellow';
+            if (pct <= 100) return 'cell-green';
+            if (pct < 200) return 'cell-blue';
+            return 'cell-darkblue';
+        }
+
+        function formatAbsoluteValue(mgVal) {
+            return mgVal >= 1000 ? (mgVal / 1000).toFixed(2) + "g" : Math.round(mgVal) + "mg";
+        }
+
+        function renderTable() {
+            const proteinTarget = parseInt(proteinSlider.value);
+            const portionWeight = parseInt(portionSlider.value);
+            const reqs = getDailyRequirements(proteinTarget);
+            const weightMultiplier = portionWeight / 100;
+
+            tableWeightLabel.innerText = `berechnet für ${portionWeight}g`;
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            // --- ZEILE 1: BEDARF-ZIELWERTE ---
+            const targetTr = document.createElement('tr');
+            targetTr.className = 'target-row';
+            
+            let targetHtml = `<td class="food-name">DEIN TAGESBEDARF (ZIEL)</td>`;
+            targetHtml += `<td>${reqs.protein.toFixed(0)}g</td>`;
+            targetHtml += `<td>${reqs.eaa.toFixed(1)}g</td>`;
+            
+            for (let key in aminoRatios) {
+                targetHtml += `<td>${formatAbsoluteValue(reqs[key])}</td>`;
+            }
+            targetTr.innerHTML = targetHtml;
+            tbody.appendChild(targetTr);
+
+            // --- LEBENSMITTEL DATEN VERARBEITEN ---
+            let processedData = foodData.map(food => {
+                let scaled = { 
+                    name: food.name, 
+                    type: food.type,
+                    kh: food.kh * weightMultiplier,
+                    fett: food.fett * weightMultiplier,
+                    kcal: food.kcal * weightMultiplier
+                };
+                scaled.protein = food.protein * weightMultiplier;
+                scaled.eaa = food.eaa * weightMultiplier;
+                for (let key in aminoRatios) {
+                    scaled[key] = food[key] * weightMultiplier;
+                }
+                return scaled;
+            });
+
+            if (currentSortKey) {
+                processedData.sort((a, b) => {
+                    return currentSortDirection === 'asc' ? a[currentSortKey] - b[currentSortKey] : b[currentSortKey] - a[currentSortKey];
+                });
+            }
+
+            // --- ZEILEN DER LEBENSMITTEL RENDERN ---
+            processedData.forEach(food => {
+                const tr = document.createElement('tr');
+                const badgeClass = food.type === 'plant' ? 'badge-plant' : 'badge-anim';
+                const badgeText = food.type === 'plant' ? 'Pflanzlich' : 'Tierisch';
+                
+                let html = `<td class="food-name">
+                    <div class="food-cell-wrapper">
+                        <span>${food.name}</span>
+                        <span class="badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                </td>`;
+
+                // Gesamtprotein
+                const protPct = Math.round((food.protein / reqs.protein) * 100);
+                html += `<td class="${getColorClass(protPct)}">${food.protein.toFixed(1)}g<span class="pct-val">(${protPct}%)</span></td>`;
+
+                // EAA Gesamt
+                const eaaPct = Math.round((food.eaa / reqs.eaa) * 100);
+                html += `<td class="${getColorClass(eaaPct)}">${food.eaa.toFixed(1)}g<span class="pct-val">(${eaaPct}%)</span></td>`;
+
+                // 20 Aminosäuren
+                for (let key in aminoRatios) {
+                    const absVal = food[key];
+                    const pct = Math.round((absVal / reqs[key]) * 100);
+                    const colorClass = getColorClass(pct);
+
+                    html += `<td class="${colorClass}">${formatAbsoluteValue(absVal)}<span class="pct-val">(${pct}%)</span></td>`;
+                }
+
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
+
+                // --- EXTENDED VIEW: 3 EXTRA ZEILEN ---
+                if (isExtendedView) {
+                    const khPct = Math.round((food.kh / macroTargets.kh) * 100);
+                    const fettPct = Math.round((food.fett / macroTargets.fett) * 100);
+                    const kcalPct = Math.round((food.kcal / macroTargets.kcal) * 100);
+
+                    // Zeile für Kohlenhydrate
+                    const khTr = document.createElement('tr');
+                    khTr.className = 'macro-row';
+                    let khHtml = `<td class="macro-label">↳ Kohlenhydrate:</td>`;
+                    khHtml += `<td colspan="22" style="text-align: left; padding-left: 10px;">${food.kh.toFixed(1)}g <span class="pct-val">(${khPct}% des Richtwerts)</span></td>`;
+                    khTr.innerHTML = khHtml;
+                    tbody.appendChild(khTr);
+
+                    // Zeile für Fett
+                    const fettTr = document.createElement('tr');
+                    fettTr.className = 'macro-row';
+                    let fettHtml = `<td class="macro-label">↳ Fett:</td>`;
+                    fettHtml += `<td colspan="22" style="text-align: left; padding-left: 10px;">${food.fett.toFixed(1)}g <span class="pct-val">(${fettPct}% des Richtwerts)</span></td>`;
+                    fettTr.innerHTML = fettHtml;
+                    tbody.appendChild(fettTr);
+
+                    // Zeile für Kalorien
+                    const kcalTr = document.createElement('tr');
+                    kcalTr.className = 'macro-row';
+                    let kcalHtml = `<td class="macro-label">↳ Energie:</td>`;
+                    kcalHtml += `<td colspan="22" style="text-align: left; padding-left: 10px;">${Math.round(food.kcal)} kcal <span class="pct-val">(${kcalPct}% des Richtwerts)</span></td>`;
+                    kcalTr.innerHTML = kcalHtml;
+                    tbody.appendChild(kcalTr);
+                }
+            });
+        }
+
+        function setupSorting() {
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.addEventListener('click', () => {
+                    const sortKey = th.getAttribute('data-sort');
+                    
+                    if (currentSortKey === sortKey) {
+                        currentSortDirection = currentSortDirection === 'desc' ? 'asc' : 'desc';
+                    } else {
+                        currentSortKey = sortKey;
+                        currentSortDirection = 'desc';
+                    }
+
+                    document.querySelectorAll('th.sortable').forEach(header => {
+                        const indicator = header.querySelector('.sort-indicator');
+                        if (indicator) indicator.innerText = '↕';
+                        header.classList.remove('sort-asc', 'sort-desc');
+                    });
+
+                    th.classList.add(currentSortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+                    const currentIndicator = th.querySelector('.sort-indicator');
+                    if (currentIndicator) {
+                        currentIndicator.innerText = currentSortDirection === 'asc' ? '▲' : '▼';
+                    }
+
+                    renderTable();
+                });
+            });
+        }
+
+        // Event-Listener für Extended View Button
+        extendedBtn.addEventListener('click', () => {
+            isExtendedView = !isExtendedView;
+            if (isExtendedView) {
+                extendedBtn.innerText = "Extended View: AN";
+                extendedBtn.classList.add('active');
+            } else {
+                extendedBtn.innerText = "Extended View: AUS";
+                extendedBtn.classList.remove('active');
+            }
+            renderTable();
+        });
+
+        proteinSlider.addEventListener('input', (e) => {
+            proteinDisplay.innerText = e.target.value;
+            renderTable();
+        });
+
+        portionSlider.addEventListener('input', (e) => {
+            portionDisplay.innerText = e.target.value;
+            renderTable();
+        });
+
+        setupSorting();
+        renderTable();
+    </script>
+</body>
+</html>
+
+```
