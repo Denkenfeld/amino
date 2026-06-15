@@ -1,15 +1,18 @@
-Hier ist der aktualisierte, vollständige HTML-Code.
+Hier ist dein aktualisierter, vollständiger HTML-Code.
 
-### Wichtigste Änderungen:
+### Das wurde wie gewünscht angepasst:
 
-* **"Extended View"-Button:** Direkt über der Tabelle (neben den Reglern) befindet sich jetzt ein Toggle-Button.
-* **Erweiterte Nährwertdaten:** Das `foodData`-Array wurde um die realen Werte für Kohlenhydrate (KH), Fett und Kalorien (kcal) pro 100g ergänzt.
-* **Dynamische Extra-Zeilen:** Wenn die erweiterte Ansicht aktiv ist, schieben sich unter jedes Lebensmittel drei flache, dezent formatierte Zeilen für KH, Fett und kcal.
-* **Kompakte Darstellung:** Der Text in diesen Extra-Zeilen ist kleiner (`8pt`) und nutzt ein angepasstes, unaufdringliches Farbschema, um die Matrix übersichtlich zu halten. Die Prozentwerte berechnen sich dynamisch auf Basis von Standard-Tageswerten (KH: 250g, Fett: 70g, kcal: 2000 kcal), damit das System stabil bleibt.
+* **Texte entfernt:** Der Untertitel im Banner sowie der Text „Die interaktive Abdeckungs-Matrix“ wurden komplett gelöscht.
+* **Layout optimiert:** Der „Extended View“-Button wurde elegant nach oben direkt in das Hauptbanner neben den Titel verschoben.
+* **Minimalistisches Hintergrundmuster:** Das obere Banner hat jetzt ein dezentes, elegantes SVG-Hintergrundmuster, das minimalistisch stilisierte Molekülverbindungen (Aminosäuren/Strukturformeln) darstellt. Es fügt sich perfekt in das Farbschema ein, ohne aufdringlich zu wirken.
+* **Layout-Erhalt:** Das schwebende Sticky-Bedienfeld (80% Deckkraft) und der Glassmorphism-Look der Tabellen bleiben voll funktionsfähig erhalten.
 
-Die HTML-Datei steht hier zum direkten Download bereit:
-Your HTML file is ready
-[file-tag: proteinkompass_v6_extended.html]
+Die aktualisierte HTML-Datei steht hier direkt zum Download bereit:
+
+[proteinkompass_v10.html](https://www.google.com/search?q=sandbox:/proteinkompass_v10.html)
+[file-tag: code-generated-file-1-4927239102948210384]
+
+Hier ist der komplette neue Code für deine Seite:
 
 ```html
 <!DOCTYPE html>
@@ -17,7 +20,7 @@ Your HTML file is ready
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimativer Proteinkompass & Aminosäuren-Matrix V6</title>
+    <title>Proteinkompass & Aminosäuren-Matrix V10</title>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -25,8 +28,15 @@ Your HTML file is ready
         
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #2d3748;
-            background-color: #f7fafc;
+            color: #1a202c;
+            background-color: #f3f4f6;
+            /* Weicher Bokeh-Hintergrund über CSS-Gradients */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(214, 219, 251, 0.7) 0%, transparent 40%),
+                radial-gradient(circle at 90% 10%, rgba(254, 215, 215, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(198, 246, 213, 0.5) 0%, transparent 50%);
+            background-attachment: fixed;
+            background-size: cover;
             line-height: 1.5;
             font-size: 11pt;
             margin: 0;
@@ -36,87 +46,86 @@ Your HTML file is ready
         .container {
             max-width: 1550px;
             margin: 0 auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 10px 0;
         }
 
+        /* Glassmorphism Basis-Stil */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.06);
+        }
+
+        /* Hauptbanner mit integriertem Molekül-Muster als SVG */
         .header-banner {
-            background: linear-gradient(135deg, #1a365d 0%, #2a4365 100%);
+            background: 
+                linear-gradient(135deg, rgba(26, 54, 93, 0.88) 0%, rgba(42, 67, 101, 0.93) 100%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M20,30 L35,40 L50,30 M35,40 L35,60 M65,70 L80,80 L95,70 M80,80 L80,100 M95,20 L105,35' stroke='rgba(255,255,255,0.04)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='20' cy='30' r='3' fill='rgba(255,255,255,0.06)'/%3E%3Ccircle cx='50' cy='30' r='2' fill='rgba(255,255,255,0.06)'/%3E%3Ccircle cx='35' cy='60' r='2.5' fill='rgba(255,255,255,0.06)'/%3E%3Ccircle cx='65' cy='70' r='2.5' fill='rgba(255,255,255,0.06)'/%3E%3Ccircle cx='95' cy='70' r='3' fill='rgba(255,255,255,0.06)'/%3E%3Ccircle cx='80' cy='100' r='2' fill='rgba(255,255,255,0.06)'/%3E%3Ccircle cx='95' cy='20' r='2' fill='rgba(255,255,255,0.06)'/%3E%3Ccircle cx='105' cy='35' r='2.5' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: #ffffff;
-            padding: 25px;
+            padding: 25px 30px;
             margin-bottom: 25px;
-            border-radius: 6px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         .header-banner h1 {
             font-size: 24pt;
-            margin: 0 0 8px 0;
+            margin: 0;
             font-weight: 700;
             letter-spacing: -0.5px;
         }
 
-        .header-banner p {
-            font-size: 12pt;
-            margin: 0;
-            color: #e2e8f0;
-            font-weight: 300;
-        }
-
-        p.intro {
-            font-size: 11pt;
-            color: #4a5568;
-            margin-bottom: 25px;
-        }
-
-        .matrix-header-zone {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        h2 {
-            font-size: 16pt;
-            color: #1a365d;
-            border-left: 4px solid #3182ce;
-            padding-left: 10px;
-            margin: 0;
-        }
-
-        /* Extended View Button */
         .btn-extended {
-            background-color: #4c51bf;
+            background-color: rgba(76, 81, 191, 0.9);
             color: white;
-            border: none;
-            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
             font-size: 10pt;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .btn-extended:hover {
-            background-color: #434190;
+            background-color: rgba(67, 65, 144, 1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
         .btn-extended.active {
-            background-color: #2b6cb0;
+            background-color: rgba(43, 108, 176, 1);
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* Compact Sliders Grid */
+        /* Sticky Control Panel mit 80% Deckkraft */
         .control-panels-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8); /* 80% Deckkraft */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 10px 30px rgba(31, 38, 135, 0.08);
         }
 
         @media (max-width: 768px) {
@@ -126,9 +135,9 @@ Your HTML file is ready
         }
 
         .control-panel {
-            background-color: #ebf8ff;
-            border: 1px solid #bee3f8;
-            border-radius: 6px;
+            background-color: rgba(235, 248, 255, 0.5);
+            border: 1px solid rgba(190, 227, 248, 0.6);
+            border-radius: 8px;
             padding: 10px 15px;
             display: flex;
             align-items: center;
@@ -161,10 +170,10 @@ Your HTML file is ready
             font-size: 12pt;
             font-weight: bold;
             color: #2b6cb0;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.7);
             padding: 2px 8px;
             border-radius: 4px;
-            border: 1px solid #cbd5e0;
+            border: 1px solid rgba(203, 213, 224, 0.5);
             min-width: 95px;
             text-align: center;
         }
@@ -179,45 +188,44 @@ Your HTML file is ready
             width: 100%;
             height: 6px;
             border-radius: 3px;
-            background: #cbd5e0;
+            background: rgba(203, 213, 224, 0.7);
             outline: none;
             -webkit-appearance: none;
         }
 
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: #3182ce;
             cursor: pointer;
-            transition: background .15s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        /* Matrix Table Styling */
         .table-container {
             width: 100%;
             margin-bottom: 20px;
-            border-radius: 6px;
             overflow-x: auto;
-            border: 1px solid #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.5);
+            border-radius: 12px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 9.5pt;
-            background-color: #ffffff;
+            background-color: transparent;
             min-width: 1200px;
         }
 
         th {
-            background-color: #2d3748;
+            background-color: rgba(45, 55, 72, 0.85);
             color: #ffffff;
             text-align: center;
-            padding: 10px 4px;
+            padding: 12px 4px;
             font-weight: 600;
-            border: 1px solid #4a5568;
+            border: 1px solid rgba(74, 85, 104, 0.4);
             user-select: none;
             vertical-align: middle;
         }
@@ -225,19 +233,18 @@ Your HTML file is ready
         th.sortable {
             cursor: pointer;
             position: relative;
-            background-color: #3a4a63;
+            background-color: rgba(58, 74, 99, 0.85);
             transition: background-color 0.2s;
         }
 
         th.sortable:hover {
-            background-color: #4a5d7c;
-            color: #fff;
+            background-color: rgba(74, 93, 124, 0.9);
         }
 
         .sort-indicator {
             display: block;
             font-size: 8.5pt;
-            color: #a0aec0;
+            color: #cbd5e0;
             margin-top: 2px;
             line-height: 1;
         }
@@ -248,15 +255,15 @@ Your HTML file is ready
         }
 
         th.food-col { width: 15%; text-align: left; padding-left: 12px; }
-        th.prot-col { background-color: #1a365d; }
-        th.eaa-col { background-color: #2b6cb0; }
-        th.eaa-head { background-color: #4c51bf; }
-        th.neaa-head { background-color: #4a5568; }
+        th.prot-col { background-color: rgba(26, 54, 93, 0.9); }
+        th.eaa-col { background-color: rgba(43, 108, 176, 0.9); }
+        th.eaa-head { background-color: rgba(76, 81, 191, 0.9); }
+        th.neaa-head { background-color: rgba(74, 85, 104, 0.9); }
 
         td {
             padding: 10px 4px;
-            border-bottom: 1px solid #e2e8f0;
-            border-right: 1px solid #edf2f7;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.4);
+            border-right: 1px solid rgba(237, 242, 247, 0.3);
             text-align: center;
             font-weight: 500;
             transition: background-color 0.15s ease;
@@ -267,7 +274,7 @@ Your HTML file is ready
             text-align: left;
             font-weight: bold;
             color: #1a365d;
-            background-color: #f7fafc;
+            background-color: rgba(247, 250, 252, 0.4);
             padding-left: 12px;
         }
 
@@ -277,28 +284,26 @@ Your HTML file is ready
             gap: 4px;
         }
 
-        /* Target row specific styling */
         tr.target-row td {
-            background-color: #f7fafc;
+            background-color: rgba(247, 250, 252, 0.6);
             color: #1a365d;
             font-weight: bold;
             font-size: 10pt;
-            border-bottom: 2px solid #cbd5e0;
+            border-bottom: 2px solid rgba(203, 213, 224, 0.6);
         }
 
         tr.target-row td.food-name {
             color: #2c5282;
-            background-color: #edf2f7;
+            background-color: rgba(237, 242, 247, 0.6);
         }
 
-        /* Extra flache Macro-Zeilen für Extended View */
         tr.macro-row td {
-            padding: 2px 4px;
+            padding: 4px 6px;
             font-size: 8pt;
             font-weight: normal;
-            color: #718096;
-            background-color: #fcfdfd;
-            border-bottom: 1px dashed #e2e8f0;
+            background-color: rgba(252, 253, 253, 0.3);
+            border-bottom: 1px dashed rgba(226, 232, 240, 0.4);
+            text-align: left;
         }
         
         tr.macro-row td.macro-label {
@@ -306,7 +311,58 @@ Your HTML file is ready
             font-weight: bold;
             padding-right: 15px;
             color: #4a5568;
-            background-color: #f7fafc;
+            background-color: rgba(247, 250, 252, 0.4);
+            width: 15%;
+        }
+
+        .macro-flex-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .macro-text-info {
+            min-width: 180px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .bar-bg {
+            background-color: rgba(226, 232, 240, 0.6);
+            border-radius: 4px;
+            height: 12px;
+            width: 50%;
+            position: relative;
+            overflow: visible;
+            border: 1px solid rgba(203, 213, 224, 0.5);
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .bar-marker-100 {
+            position: absolute;
+            left: 50%;
+            top: -3px;
+            bottom: -3px;
+            width: 2px;
+            background-color: #718096;
+            z-index: 2;
+        }
+
+        .bar-marker-label {
+            position: absolute;
+            left: 50%;
+            top: -14px;
+            transform: translateX(-50%);
+            font-size: 7pt;
+            color: #4a5568;
+            font-weight: bold;
+            white-space: nowrap;
         }
 
         .pct-val {
@@ -315,20 +371,14 @@ Your HTML file is ready
             margin-top: 2px;
             font-weight: bold;
         }
-        
-        .macro-row .pct-val {
-            display: inline;
-            margin-left: 3px;
-            font-size: 7.5pt;
-        }
 
-        /* Color classes for percentages */
-        .cell-red { background-color: #fff5f5 !important; color: #e53e3e; }
-        .cell-orange { background-color: #fffaf0 !important; color: #dd6b20; }
-        .cell-yellow { background-color: #fefcbf !important; color: #b7791f; }
-        .cell-green { background-color: #c6f6d5 !important; color: #22543d; }
-        .cell-blue { background-color: #ebf8ff !important; color: #2b6cb0; }
-        .cell-darkblue { background-color: #2b6cb0 !important; color: #ffffff; }
+        /* Glassmorphism Ampelfarben mit transparenterem Look */
+        .cell-red { background-color: rgba(255, 215, 215, 0.45) !important; color: #c53030; }
+        .cell-orange { background-color: rgba(254, 235, 200, 0.45) !important; color: #dd6b20; }
+        .cell-yellow { background-color: rgba(254, 252, 191, 0.45) !important; color: #b7791f; }
+        .cell-green { background-color: rgba(198, 246, 213, 0.45) !important; color: #22543d; }
+        .cell-blue { background-color: rgba(219, 242, 255, 0.45) !important; color: #2b6cb0; }
+        .cell-darkblue { background-color: rgba(43, 108, 176, 0.8) !important; color: #ffffff; }
 
         .badge {
             display: inline-block;
@@ -339,19 +389,16 @@ Your HTML file is ready
             border-radius: 3px;
             margin-top: 2px;
         }
-        .badge-plant { background-color: #e6fffa; color: #234e52; border: 1px solid #b2f5ea; }
-        .badge-anim { background-color: #fffaf0; color: #7b341e; border: 1px solid #feebc8; }
+        .badge-plant { background-color: rgba(230, 255, 250, 0.7); color: #234e52; border: 1px solid #b2f5ea; }
+        .badge-anim { background-color: rgba(255, 250, 240, 0.7); color: #7b341e; border: 1px solid #feebc8; }
 
         .color-legend {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-top: 15px;
-            margin-bottom: 20px;
-            background-color: #ffffff;
+            margin-bottom: 15px;
             padding: 12px 15px;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
         }
 
         .legend-item {
@@ -370,21 +417,23 @@ Your HTML file is ready
         }
 
         .legend-box {
-            background-color: #f7fafc;
-            border: 1px solid #e2e8f0;
             padding: 15px;
-            border-radius: 6px;
-            font-size: 9.5pt;
-            color: #4a5568;
+            margin-bottom: 15px;
         }
         
+        .info-box {
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #3182ce;
+        }
+
         .footer {
             margin-top: 40px;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid rgba(226, 232, 240, 0.4);
             padding-top: 15px;
             text-align: center;
             font-size: 9pt;
-            color: #a0aec0;
+            color: #718096;
         }
     </style>
 </head>
@@ -392,16 +441,7 @@ Your HTML file is ready
 
     <div class="container">
         <div class="header-banner">
-            <h1>Ultimativer Proteinkompass & Aminosäuren-Matrix</h1>
-            <p>Kompakter Echtzeit-Bedarfsabgleich mit integrierter Zielwert-Zeile und dynamischem Ampelsystem</p>
-        </div>
-
-        <p class="intro">
-            <strong>Bedienungsanleitung:</strong> Über den linken Regler stellst du dein tägliches Proteinziel ein, welches sofort die oberste Zeile der Matrix aktualisiert. Über den rechten Regler bestimmst du die simulierte Portion der Lebensmittel. Die Tabellenzellen zeigen die jeweilige Abdeckung bezogen auf das eingestellte Tagesziel. Klicke auf die Spaltenüberschriften, um nach beliebigen Kriterien zu sortieren.
-        </p>
-
-        <div class="matrix-header-zone">
-            <h2>Die interaktive Abdeckungs-Matrix</h2>
+            <h1>Proteinkompass & Aminosäuren-Matrix</h1>
             <button id="extended-view-btn" class="btn-extended">Extended View: AUS</button>
         </div>
         
@@ -418,7 +458,7 @@ Your HTML file is ready
                 </div>
             </div>
 
-            <div class="control-panel" style="background-color: #f0fff4; border-color: #c6f6d5;">
+            <div class="control-panel" style="background-color: rgba(240, 255, 244, 0.5); border-color: rgba(198, 246, 213, 0.6);">
                 <div class="slider-wrapper">
                     <div class="slider-label-group">
                         <span class="slider-title" style="color: #22543d;">2. Portion:</span>
@@ -431,7 +471,7 @@ Your HTML file is ready
             </div>
         </div>
 
-        <div class="table-container">
+        <div class="table-container glass-panel">
             <table id="matrix-table">
                 <thead>
                     <tr>
@@ -470,7 +510,7 @@ Your HTML file is ready
             </table>
         </div>
 
-        <div class="color-legend">
+        <div class="color-legend glass-panel">
             <div class="legend-item"><div class="legend-color-box cell-red"></div> 0 - 25% (Sehr gering)</div>
             <div class="legend-item"><div class="legend-color-box cell-orange"></div> 26 - 50% (Mäßig)</div>
             <div class="legend-item"><div class="legend-color-box cell-yellow"></div> 51 - 75% (Gute Quelle)</div>
@@ -479,12 +519,17 @@ Your HTML file is ready
             <div class="legend-item"><div class="legend-color-box cell-darkblue"></div> &ge; 200% (Hervorragende Überdeckung)</div>
         </div>
 
-        <div class="legend-box">
+        <div class="legend-box glass-panel">
             <strong>Hinweise zur dynamischen Auswertung:</strong>
             <ul>
                 <li>Die oberste Zeile <b>"DEIN TAGESBEDARF (ZIEL)"</b> ist fixiert und dient als direkter optischer Bezugswert für die Proteine.</li>
-                <li>Der Button <b>"Extended View"</b> blendet zusätzliche Zeilen für Kohlenhydrate, Fett und Kalorien ein. Deren Prozentwerte basieren zur Orientierung auf Richtwerten (250g KH, 70g Fett, 2000 kcal).</li>
+                <li>Der Button <b>"Extended View"</b> blendet zusätzliche Zeilen für Proteine, Kohlenhydrate, Fett und Kalorien ein. Deren Prozentwerte basieren zur Orientierung auf den ausgewählten Zielwerten bzw. Richtwerten (250g KH, 70g Fett, 2000 kcal).</li>
+                <li>Die horizontalen Balken laufen bis zur Mitte für 100% und bis zum rechten Rand für 200%. Bei Werten über 200% bleibt der Balken maximiert, dunkelt sich jedoch progressiv ein.</li>
             </ul>
+        </div>
+
+        <div class="info-box glass-panel">
+            <strong>Bedienungsanleitung:</strong> Über den linken Regler stellst du dein tägliches Proteinziel ein, welches sofort die oberste Zeile der Matrix aktualisiert. Über den rechten Regler bestimmst du die simulierte Portion der Lebensmittel. Die Tabellenzellen zeigen die jeweilige Abdeckung bezogen auf das eingestellte Tagesziel. Klicke auf die Spaltenüberschriften, um nach beliebigen Kriterien zu sortieren.
         </div>
 
         <div class="footer">
@@ -498,10 +543,8 @@ Your HTML file is ready
             arg: 40, glu: 120, asp: 70, ala: 40, cys: 15, gly: 35, pro: 50, ser: 40, tyr: 30, asn: 15, gln: 20
         };
 
-        // Standard-Referenzwerte für die Makro-Abdeckungsberechnung (DGE / Richtwerte)
         const macroTargets = { kh: 250, fett: 70, kcal: 2000 };
 
-        // Rohdaten inklusive erweiterter Nährwerte (KH, Fett, Kalorien pro 100g)
         const foodData = [
             { name: "Vollei", type: "anim", protein: 13.0, eaa: 5.8, kh: 0.7, fett: 9.3, kcal: 137, leu: 1100, ile: 700, val: 800, lys: 900, met: 400, phe: 660, thr: 600, trp: 180, his: 300, arg: 800, glu: 1600, asp: 1300, ala: 750, cys: 290, gly: 450, pro: 500, ser: 900, tyr: 500, asn: 400, gln: 550 },
             { name: "Sojabohnen (trocken)", type: "plant", protein: 36.0, eaa: 14.2, kh: 6.3, fett: 20.0, kcal: 387, leu: 2800, ile: 1700, val: 1800, lys: 2200, met: 480, phe: 1700, thr: 1400, trp: 450, his: 950, arg: 2700, glu: 6400, asp: 4100, ala: 1600, cys: 550, gly: 1600, pro: 1900, ser: 1900, tyr: 1200, asn: 1100, gln: 1500 },
@@ -547,6 +590,27 @@ Your HTML file is ready
             return 'cell-darkblue';
         }
 
+        function generateBarStyles(pct) {
+            let widthPct = 0;
+            let bgColor = '#3182ce';
+
+            if (pct <= 200) {
+                widthPct = pct * 0.5;
+                if (pct <= 25) bgColor = '#e53e3e';
+                else if (pct <= 50) bgColor = '#dd6b20';
+                else if (pct <= 75) bgColor = '#d69e2e';
+                else if (pct <= 100) bgColor = '#38a169';
+                else bgColor = '#3182ce';
+            } else {
+                widthPct = 100;
+                let excess = Math.min((pct - 200) / 3, 50);
+                let lightness = Math.max(40 - excess, 10);
+                bgColor = `hsl(211, 65%, ${lightness}%)`;
+            }
+
+            return `width: ${widthPct}%; background-color: ${bgColor};`;
+        }
+
         function formatAbsoluteValue(mgVal) {
             return mgVal >= 1000 ? (mgVal / 1000).toFixed(2) + "g" : Math.round(mgVal) + "mg";
         }
@@ -561,7 +625,6 @@ Your HTML file is ready
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
 
-            // --- ZEILE 1: BEDARF-ZIELWERTE ---
             const targetTr = document.createElement('tr');
             targetTr.className = 'target-row';
             
@@ -575,7 +638,6 @@ Your HTML file is ready
             targetTr.innerHTML = targetHtml;
             tbody.appendChild(targetTr);
 
-            // --- LEBENSMITTEL DATEN VERARBEITEN ---
             let processedData = foodData.map(food => {
                 let scaled = { 
                     name: food.name, 
@@ -598,7 +660,6 @@ Your HTML file is ready
                 });
             }
 
-            // --- ZEILEN DER LEBENSMITTEL RENDERN ---
             processedData.forEach(food => {
                 const tr = document.createElement('tr');
                 const badgeClass = food.type === 'plant' ? 'badge-plant' : 'badge-anim';
@@ -611,55 +672,54 @@ Your HTML file is ready
                     </div>
                 </td>`;
 
-                // Gesamtprotein
                 const protPct = Math.round((food.protein / reqs.protein) * 100);
                 html += `<td class="${getColorClass(protPct)}">${food.protein.toFixed(1)}g<span class="pct-val">(${protPct}%)</span></td>`;
 
-                // EAA Gesamt
                 const eaaPct = Math.round((food.eaa / reqs.eaa) * 100);
                 html += `<td class="${getColorClass(eaaPct)}">${food.eaa.toFixed(1)}g<span class="pct-val">(${eaaPct}%)</span></td>`;
 
-                // 20 Aminosäuren
                 for (let key in aminoRatios) {
                     const absVal = food[key];
                     const pct = Math.round((absVal / reqs[key]) * 100);
-                    const colorClass = getColorClass(pct);
-
-                    html += `<td class="${colorClass}">${formatAbsoluteValue(absVal)}<span class="pct-val">(${pct}%)</span></td>`;
+                    html += `<td class="${getColorClass(pct)}">${formatAbsoluteValue(absVal)}<span class="pct-val">(${pct}%)</span></td>`;
                 }
 
                 tr.innerHTML = html;
                 tbody.appendChild(tr);
 
-                // --- EXTENDED VIEW: 3 EXTRA ZEILEN ---
                 if (isExtendedView) {
-                    const khPct = Math.round((food.kh / macroTargets.kh) * 100);
-                    const fettPct = Math.round((food.fett / macroTargets.fett) * 100);
-                    const kcalPct = Math.round((food.kcal / macroTargets.kcal) * 100);
+                    const macros = [
+                        { label: '↳ Protein:', value: food.protein, target: reqs.protein, unit: 'g', showLabel: false },
+                        { label: '↳ Kohlenhydrate:', value: food.kh, target: macroTargets.kh, unit: 'g', showLabel: true },
+                        { label: '↳ Fett:', value: food.fett, target: macroTargets.fett, unit: 'g', showLabel: false },
+                        { label: '↳ Energie:', value: food.kcal, target: macroTargets.kcal, unit: 'kcal', round: true, showLabel: false }
+                    ];
 
-                    // Zeile für Kohlenhydrate
-                    const khTr = document.createElement('tr');
-                    khTr.className = 'macro-row';
-                    let khHtml = `<td class="macro-label">↳ Kohlenhydrate:</td>`;
-                    khHtml += `<td colspan="22" style="text-align: left; padding-left: 10px;">${food.kh.toFixed(1)}g <span class="pct-val">(${khPct}% des Richtwerts)</span></td>`;
-                    khTr.innerHTML = khHtml;
-                    tbody.appendChild(khTr);
+                    macros.forEach(macro => {
+                        const pct = Math.round((macro.value / macro.target) * 100);
+                        const displayVal = macro.round ? Math.round(macro.value) : macro.value.toFixed(1);
+                        
+                        const macroTr = document.createElement('tr');
+                        macroTr.className = 'macro-row';
 
-                    // Zeile für Fett
-                    const fettTr = document.createElement('tr');
-                    fettTr.className = 'macro-row';
-                    let fettHtml = `<td class="macro-label">↳ Fett:</td>`;
-                    fettHtml += `<td colspan="22" style="text-align: left; padding-left: 10px;">${food.fett.toFixed(1)}g <span class="pct-val">(${fettPct}% des Richtwerts)</span></td>`;
-                    fettTr.innerHTML = fettHtml;
-                    tbody.appendChild(fettTr);
-
-                    // Zeile für Kalorien
-                    const kcalTr = document.createElement('tr');
-                    kcalTr.className = 'macro-row';
-                    let kcalHtml = `<td class="macro-label">↳ Energie:</td>`;
-                    kcalHtml += `<td colspan="22" style="text-align: left; padding-left: 10px;">${Math.round(food.kcal)} kcal <span class="pct-val">(${kcalPct}% des Richtwerts)</span></td>`;
-                    kcalTr.innerHTML = kcalHtml;
-                    tbody.appendChild(kcalTr);
+                        let rowHtml = `<td class="macro-label">${macro.label}</td>`;
+                        
+                        rowHtml += `<td colspan="22" style="background-color:rgba(250,251,252,0.25);">
+                            <div class="macro-flex-container">
+                                <div class="macro-text-info">
+                                    ${displayVal}${macro.unit} <span style="color:#718096; font-weight:normal;">(${pct}%)</span>
+                                </div>
+                                <div class="bar-bg">
+                                    ${macro.showLabel ? '<div class="bar-marker-label">100%</div>' : ''}
+                                    <div class="bar-marker-100"></div>
+                                    <div class="bar-fill" style="${generateBarStyles(pct)}"></div>
+                                </div>
+                            </div>
+                        </td>`;
+                        
+                        macroTr.innerHTML = rowHtml;
+                        tbody.appendChild(macroTr);
+                    });
                 }
             });
         }
@@ -693,7 +753,6 @@ Your HTML file is ready
             });
         }
 
-        // Event-Listener für Extended View Button
         extendedBtn.addEventListener('click', () => {
             isExtendedView = !isExtendedView;
             if (isExtendedView) {
